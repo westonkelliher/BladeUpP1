@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://mx4j4vyk54dv"]
+
+[ext_resource type="Texture2D" uid="uid://gtiryingujvt" path="res://images/player.png" id="1_801s6"]
+[ext_resource type="Script" path="res://player.gd" id="1_vnftm"]
+[ext_resource type="PackedScene" uid="uid://dw85cypnl5u2c" path="res://progress_bar.tscn" id="3_663qe"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gd10r"]
+radius = 49.0102
+
+[node name="Player" type="CharacterBody2D"]
+motion_mode = 1
+floor_block_on_wall = false
+script = ExtResource("1_vnftm")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 2
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("1_801s6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_gd10r")
+
+[node name="Hands" type="Node2D" parent="."]
+position = Vector2(55, 26)
+
+[node name="Caster" type="RayCast2D" parent="."]
+position = Vector2(43, 0)
+exclude_parent = false
+target_position = Vector2(50, 0)
+
+[node name="D" type="Node" parent="."]
+
+[node name="ProgressBar" parent="D" instance=ExtResource("3_663qe")]
+visible = false
+position = Vector2(-52, -88)
+
+[connection signal="complete" from="D/ProgressBar" to="." method="_on_progress_bar_complete"]

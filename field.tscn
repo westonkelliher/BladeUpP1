@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://bdc2kj64an4wx"]
+
+[ext_resource type="Script" path="res://field.gd" id="1_i056k"]
+[ext_resource type="Texture2D" uid="uid://c0pmud44iyxfr" path="res://images/field.png" id="2_3betu"]
+[ext_resource type="PackedScene" uid="uid://c4pqp6blbg2p7" path="res://boulder.tscn" id="3_tbm80"]
+
+[node name="Field" type="Node2D"]
+script = ExtResource("1_i056k")
+
+[node name="BG" type="Sprite2D" parent="."]
+texture = ExtResource("2_3betu")
+centered = false
+
+[node name="Boulder" parent="." instance=ExtResource("3_tbm80")]
+position = Vector2(830, 522)

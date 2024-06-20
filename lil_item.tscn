@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://cxoj4nhi5wr0w"]
+
+[ext_resource type="Script" path="res://LilItem.gd" id="1_oshe1"]
+[ext_resource type="Texture2D" uid="uid://bjgn7fwj4jjt4" path="res://images/rock.png" id="2_a6g2x"]
+
+[node name="LilItem" type="Node2D"]
+script = ExtResource("1_oshe1")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("2_a6g2x")

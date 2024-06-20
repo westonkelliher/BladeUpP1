@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://c0o5flqqwa00o"]
+
+[ext_resource type="PackedScene" uid="uid://bdc2kj64an4wx" path="res://field.tscn" id="1_noyy0"]
+
+[node name="Main" type="Node"]
+
+[node name="Field" parent="." instance=ExtResource("1_noyy0")]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+texture_filter = 2
+anchor_mode = 0
