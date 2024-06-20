@@ -1,11 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://c0o5flqqwa00o"]
+[gd_scene load_steps=4 format=3 uid="uid://c0o5flqqwa00o"]
 
+[ext_resource type="Script" path="res://main.gd" id="1_ci7jx"]
 [ext_resource type="PackedScene" uid="uid://bdc2kj64an4wx" path="res://field.tscn" id="1_noyy0"]
+[ext_resource type="PackedScene" uid="uid://mx4j4vyk54dv" path="res://player.tscn" id="2_actpa"]
 
 [node name="Main" type="Node"]
+script = ExtResource("1_ci7jx")
 
 [node name="Field" parent="." instance=ExtResource("1_noyy0")]
 
 [node name="Camera2D" type="Camera2D" parent="."]
 texture_filter = 2
 anchor_mode = 0
+
+[node name="Player" parent="." instance=ExtResource("2_actpa")]
+position = Vector2(292, 247)

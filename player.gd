@@ -2,21 +2,10 @@ extends CharacterBody2D
 
 
 #### Constants ####
-const SPEED = 300.0
+const SPEED = 400.0
 const ACC = 5000.0
-const PROGRESS_SPEED = 1.0
+const PROGRESS_SPEED = 0.8
 
-
-#### Members ####
-var _hand_item: Node = null:
-	set(value):
-		_hand_item = value
-		for child in $Hands.get_children():
-			$Hands.remove_child(child)
-		if _hand_item != null:
-			$Hands.add_child(value)
-	get:
-		return _hand_item
 #
 var _faced_object: Node = null
 #
@@ -30,24 +19,32 @@ var _progress := 0.0 :
 			$D/ProgressBar.visible = true
 	get:
 		return _progress
-
+#
+var _multiplayer_id: int = -1
 
 #### Builtins ####
+func _enter_tree():
+	set_multiplayer_authority(name.to_int())
+	position = Vector2.ONE*300
+
 func _process(delta):
 	$D/ProgressBar.position = position + Vector2(0, -85)
 
 func _physics_process(delta):
+	if !is_multiplayer_authority():
+		#move_and_slide()
+		return
 	handle_movement(delta)
 	if $Caster.get_collider() != _faced_object:
 		_faced_object = $Caster.get_collider()
 		_progress = 0.0
+	#
 	if Input.is_action_pressed("operate"):
 		operate(delta)
 	elif Input.is_action_just_released("operate"):
 		_progress = 0.0
 	elif Input.is_action_just_pressed("interact"):
-		_hand_item.queue_free()
-		_hand_item = null
+		interact()
 	#if Input.is_action_just_pressed("process"):
 		#_hand_item = null
 
@@ -73,34 +70,76 @@ func handle_movement(delta):
 
 
 #### Interaction and Operation ####
+func interact():
+	if _faced_object is Table:
+		interact_table()
+	elif _faced_object == null and $HeldItem._type == LilItem.Type.BLADE:
+		set_held_item(LilItem.Type.NONE)
+	pass
+
+func interact_table():
+	var table = _faced_object
+	if $HeldItem.is_none():
+		set_held_item(table.take_item())
+	elif table.can_add_item():
+		table.add_item($HeldItem._type)
+		set_held_item(LilItem.Type.NONE)
+
 func operate(delta):
 	if !operate_():
-		print("false")
 		return
+	if _progress == 0.0:
+		start_operate()
 	_progress += PROGRESS_SPEED*delta
-	print(_progress)
 	if _progress == 1.0:
-		print("done")
 		complete()
-	
+
+func start_operate():
+	rpc("sync_start_operate", PROGRESS_SPEED)
+
 # returns true if there's something to be processed
 func operate_():
 	if _faced_object is Boulder:
-		print("a")
 		return operate_boulder()
+	if _faced_object is Table:
+		return operate_table()
 	return false
 
 func operate_boulder():
-	print(_hand_item == null)
-	return _hand_item == null
+	if $HeldItem.is_none():
+		return true
+	return false
+
+func operate_table():
+	var table = _faced_object
+	if $HeldItem.is_none():
+		return table.held_item() == LilItem.Type.ROCK
+	return false
 
 func complete():
 	_progress = 0
 	if _faced_object is Boulder:
 		complete_boulder()
+	if _faced_object is Table:
+		complete_table()
 
 func complete_boulder():
-	print("ok")
 	var rock = preload("res://lil_item.tscn").instantiate()
-	_hand_item = rock
+	set_held_item(LilItem.Type.ROCK)
 
+func complete_table():
+	var table = _faced_object
+	table.add_item(LilItem.Type.BLADE)
+
+func set_held_item(type: LilItem.Type):
+	rpc("sync_held_item", type)
+
+#### RPC and Syncapation ####
+@rpc("call_remote")
+func sync_start_operate(speed: float):
+	$D/ProgressBar.set_visual_rate(speed)
+
+@rpc("call_local")
+func sync_held_item(type: LilItem.Type):
+	print(name+str(type))
+	$HeldItem._type = type

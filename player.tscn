@@ -1,11 +1,23 @@
-[gd_scene load_steps=5 format=3 uid="uid://mx4j4vyk54dv"]
+[gd_scene load_steps=7 format=3 uid="uid://mx4j4vyk54dv"]
 
 [ext_resource type="Texture2D" uid="uid://gtiryingujvt" path="res://images/player.png" id="1_801s6"]
 [ext_resource type="Script" path="res://player.gd" id="1_vnftm"]
+[ext_resource type="PackedScene" uid="uid://cxoj4nhi5wr0w" path="res://lil_item.tscn" id="3_4khuj"]
 [ext_resource type="PackedScene" uid="uid://dw85cypnl5u2c" path="res://progress_bar.tscn" id="3_663qe"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gd10r"]
 radius = 49.0102
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_6qsj4"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("D/ProgressBar:visible")
+properties/2/spawn = true
+properties/2/replication_mode = 1
 
 [node name="Player" type="CharacterBody2D"]
 motion_mode = 1
@@ -20,7 +32,7 @@ texture = ExtResource("1_801s6")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_gd10r")
 
-[node name="Hands" type="Node2D" parent="."]
+[node name="HeldItem" parent="." instance=ExtResource("3_4khuj")]
 position = Vector2(55, 26)
 
 [node name="Caster" type="RayCast2D" parent="."]
@@ -33,5 +45,8 @@ target_position = Vector2(50, 0)
 [node name="ProgressBar" parent="D" instance=ExtResource("3_663qe")]
 visible = false
 position = Vector2(-52, -88)
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_6qsj4")
 
 [connection signal="complete" from="D/ProgressBar" to="." method="_on_progress_bar_complete"]
