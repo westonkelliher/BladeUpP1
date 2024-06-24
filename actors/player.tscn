@@ -1,9 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://mx4j4vyk54dv"]
+[gd_scene load_steps=9 format=3 uid="uid://mx4j4vyk54dv"]
 
 [ext_resource type="Texture2D" uid="uid://gtiryingujvt" path="res://images/player.png" id="1_801s6"]
-[ext_resource type="Script" path="res://player.gd" id="1_vnftm"]
-[ext_resource type="PackedScene" uid="uid://cxoj4nhi5wr0w" path="res://lil_item.tscn" id="3_4khuj"]
-[ext_resource type="PackedScene" uid="uid://dw85cypnl5u2c" path="res://progress_bar.tscn" id="3_663qe"]
+[ext_resource type="Script" path="res://actors/player.gd" id="1_vnftm"]
+[ext_resource type="PackedScene" uid="uid://cxoj4nhi5wr0w" path="res://items/lil_item.tscn" id="3_hel4s"]
+[ext_resource type="PackedScene" uid="uid://dw85cypnl5u2c" path="res://utils/progress_bar.tscn" id="4_dn1e2"]
+[ext_resource type="PackedScene" uid="uid://cnd35dmdihcoo" path="res://utils/health_component.tscn" id="5_n62at"]
+[ext_resource type="PackedScene" uid="uid://b2uduvsvbxgja" path="res://utils/health_bar.tscn" id="6_b1vi6"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gd10r"]
 radius = 49.0102
@@ -20,6 +22,7 @@ properties/2/spawn = true
 properties/2/replication_mode = 1
 
 [node name="Player" type="CharacterBody2D"]
+collision_mask = 48
 motion_mode = 1
 floor_block_on_wall = false
 script = ExtResource("1_vnftm")
@@ -32,21 +35,28 @@ texture = ExtResource("1_801s6")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_gd10r")
 
-[node name="HeldItem" parent="." instance=ExtResource("3_4khuj")]
+[node name="HeldItem" parent="." instance=ExtResource("3_hel4s")]
 position = Vector2(55, 26)
 
 [node name="Caster" type="RayCast2D" parent="."]
 position = Vector2(43, 0)
 exclude_parent = false
 target_position = Vector2(50, 0)
+collision_mask = 17
 
 [node name="D" type="Node" parent="."]
 
-[node name="ProgressBar" parent="D" instance=ExtResource("3_663qe")]
+[node name="ProgressBar" parent="D" instance=ExtResource("4_dn1e2")]
 visible = false
 position = Vector2(-52, -88)
+
+[node name="Health" parent="D" instance=ExtResource("5_n62at")]
+
+[node name="HealthBar" parent="D/Health" instance=ExtResource("6_b1vi6")]
+visible = false
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_6qsj4")
 
 [connection signal="complete" from="D/ProgressBar" to="." method="_on_progress_bar_complete"]
+[connection signal="death" from="D/Health" to="." method="_on_health_death"]

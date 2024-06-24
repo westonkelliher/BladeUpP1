@@ -1,22 +1,24 @@
 [gd_scene load_steps=5 format=3 uid="uid://v4s2usn1dasn"]
 
 [ext_resource type="Texture2D" uid="uid://rssadl5nlrvb" path="res://images/table.png" id="1_5rb0a"]
-[ext_resource type="Script" path="res://table.gd" id="1_idcsh"]
-[ext_resource type="PackedScene" uid="uid://cxoj4nhi5wr0w" path="res://lil_item.tscn" id="3_j6x5r"]
+[ext_resource type="Script" path="res://objects/table.gd" id="1_idcsh"]
+[ext_resource type="PackedScene" uid="uid://cxoj4nhi5wr0w" path="res://items/lil_item.tscn" id="3_j6x5r"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vrbtl"]
 size = Vector2(88, 90)
 
 [node name="Table" type="RigidBody2D"]
+collision_layer = 16
+collision_mask = 0
 gravity_scale = 0.0
 script = ExtResource("1_idcsh")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_vrbtl")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("1_5rb0a")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_vrbtl")
 
 [node name="HeldItem" parent="." instance=ExtResource("3_j6x5r")]
 

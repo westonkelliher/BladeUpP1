@@ -1,5 +1,9 @@
 extends Node2D
 
+signal enemy_spawned()
+
+
+var players := []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -10,5 +14,11 @@ func _ready():
 func _process(delta):
 	return
 	if Input.is_action_just_pressed("down"):
-		var rock = preload("res://lil_item.tscn").instantiate()
+		var rock = preload("res://items/lil_item.tscn").instantiate()
 		$Player._hand_item = rock
+
+
+
+
+func _on_enemy_spawn_timeout():
+	enemy_spawned.emit()

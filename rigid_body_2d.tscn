@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=3 uid="uid://dosfwg0f58lx2"]
+
+[ext_resource type="Texture2D" uid="uid://en1c4igq4vtx" path="res://icon.svg" id="1_2tthd"]
+
+[sub_resource type="GDScript" id="GDScript_vquia"]
+script/source = "extends RigidBody2D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+
+
+func _on_body_entered(body):
+	print(\"rigid\")
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_58l6x"]
+size = Vector2(128, 128)
+
+[node name="RigidBody2D" type="RigidBody2D"]
+collision_layer = 0
+gravity_scale = 0.0
+max_contacts_reported = 4
+contact_monitor = true
+script = SubResource("GDScript_vquia")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_58l6x")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_2tthd")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

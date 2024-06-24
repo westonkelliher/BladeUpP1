@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://cxoj4nhi5wr0w"]
 
-[ext_resource type="Script" path="res://LilItem.gd" id="1_oshe1"]
+[ext_resource type="Script" path="res://items/LilItem.gd" id="1_oshe1"]
 [ext_resource type="Texture2D" uid="uid://bjgn7fwj4jjt4" path="res://images/rock.png" id="2_a6g2x"]
 [ext_resource type="Texture2D" uid="uid://b6u7c0egk71p3" path="res://images/rock_blade.png" id="3_g1bqd"]
 

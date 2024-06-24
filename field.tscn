@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://bdc2kj64an4wx"]
+[gd_scene load_steps=6 format=3 uid="uid://bdc2kj64an4wx"]
 
 [ext_resource type="Script" path="res://field.gd" id="1_i056k"]
 [ext_resource type="Texture2D" uid="uid://c0pmud44iyxfr" path="res://images/field.png" id="2_3betu"]
-[ext_resource type="PackedScene" uid="uid://c4pqp6blbg2p7" path="res://boulder.tscn" id="3_tbm80"]
-[ext_resource type="PackedScene" uid="uid://v4s2usn1dasn" path="res://table.tscn" id="4_qtxj3"]
+[ext_resource type="PackedScene" uid="uid://c4pqp6blbg2p7" path="res://objects/boulder.tscn" id="3_tbm80"]
+[ext_resource type="PackedScene" uid="uid://v4s2usn1dasn" path="res://objects/table.tscn" id="4_qtxj3"]
+[ext_resource type="PackedScene" uid="uid://yi3ynnkm2x85" path="res://utils/wall.tscn" id="5_62thv"]
 
 [node name="Field" type="Node2D"]
 script = ExtResource("1_i056k")
@@ -17,3 +18,26 @@ position = Vector2(830, 522)
 
 [node name="Table" parent="." instance=ExtResource("4_qtxj3")]
 position = Vector2(1199, 543)
+
+[node name="EnemySpawn" type="Timer" parent="."]
+wait_time = 5.0
+
+[node name="Wall" parent="." instance=ExtResource("5_62thv")]
+position = Vector2(960, -157)
+scale = Vector2(1.1084, 0.19519)
+
+[node name="Wall2" parent="." instance=ExtResource("5_62thv")]
+position = Vector2(960, 1235)
+scale = Vector2(1.1084, 0.19519)
+
+[node name="Wall3" parent="." instance=ExtResource("5_62thv")]
+position = Vector2(-152, 559)
+rotation = 1.57079
+scale = Vector2(1.1084, 0.19519)
+
+[node name="Wall4" parent="." instance=ExtResource("5_62thv")]
+position = Vector2(2072, 559)
+rotation = 1.57079
+scale = Vector2(1.1084, 0.19519)
+
+[connection signal="timeout" from="EnemySpawn" to="." method="_on_enemy_spawn_timeout"]

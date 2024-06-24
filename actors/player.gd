@@ -1,12 +1,21 @@
 extends CharacterBody2D
 
+signal test_signal()
+signal died()
 
 #### Constants ####
 const SPEED = 400.0
 const ACC = 5000.0
 const PROGRESS_SPEED = 0.8
 
-#
+
+
+#### Identifiers ####
+func health() -> HealthComponent:
+	return $D/Health
+
+
+#### Members ####
 var _faced_object: Node = null
 #
 var _progress := 0.0 :
@@ -29,6 +38,7 @@ func _enter_tree():
 
 func _process(delta):
 	$D/ProgressBar.position = position + Vector2(0, -85)
+	$D/Health/HealthBar.position = position + Vector2(0, 85)
 
 func _physics_process(delta):
 	if !is_multiplayer_authority():
@@ -54,6 +64,7 @@ func handle_movement(delta):
 	var move_vec = Vector2.ZERO
 	if Input.is_action_pressed("right"):
 		move_vec += Vector2.RIGHT
+		test_signal.emit()
 	if Input.is_action_pressed("left"):
 		move_vec += Vector2.LEFT
 	if Input.is_action_pressed("up"):
@@ -124,7 +135,7 @@ func complete():
 		complete_table()
 
 func complete_boulder():
-	var rock = preload("res://lil_item.tscn").instantiate()
+	var rock = preload("res://items/lil_item.tscn").instantiate()
 	set_held_item(LilItem.Type.ROCK)
 
 func complete_table():
@@ -143,3 +154,8 @@ func sync_start_operate(speed: float):
 func sync_held_item(type: LilItem.Type):
 	print(name+str(type))
 	$HeldItem._type = type
+
+
+func _on_health_death():
+	queue_free()
+	died.emit()
