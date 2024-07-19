@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name Enemy
 
 const SPEED := 520.0
 const ACC := 80.0
@@ -51,7 +52,6 @@ func change_velocity(delta):
 	velocity = velocity.move_toward(target_vel, acc_factor*delta)
 
 func _on_area_2d_body_entered(body):
-	print("area")
 	if body.has_method("take_damage"):
 		# Only apply damage to a player if this instance of the game is the
 		# owner of that player. Same thing for non-players but the
@@ -63,6 +63,12 @@ func _on_area_2d_body_entered(body):
 	var knock = (position - body.position).normalized()*KNOCK_FORCE
 	velocity *= 0.3
 	velocity += knock
+	#
+	if body is Projectile: # TODO: Handle in Projectile or maybe just do 
+						   #       separate impulse calculation.
+		body.apply_central_impulse(-knock)
+		return 
+	#
 	body.velocity *= 0.5
 	body.velocity -= knock
 

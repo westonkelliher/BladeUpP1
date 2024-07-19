@@ -3,6 +3,7 @@ class_name Player
 
 signal test_signal()
 signal died(player: Player)
+signal item_thrown(player: Player)
 
 #### Constants ####
 const SPEED = 400.0
@@ -56,6 +57,8 @@ func _physics_process(delta):
 		_progress = 0.0
 	elif Input.is_action_just_pressed("interact"):
 		interact()
+	elif Input.is_action_just_pressed("throw"):
+		throw()
 	#if Input.is_action_just_pressed("process"):
 		#_hand_item = null
 
@@ -85,8 +88,6 @@ func handle_movement(delta):
 func interact():
 	if _faced_object is Table:
 		interact_table()
-	elif _faced_object == null and $HeldItem._type == LilItem.Type.BLADE:
-		set_held_item(LilItem.Type.NONE)
 	pass
 
 func interact_table():
@@ -158,10 +159,17 @@ func set_held_item(type: LilItem.Type):
 
 
 
-#### Reaction ####
+#### Action ####
 func take_damage(dmg: int):
 	$D/Health.take_damage(dmg)
 	rpc("sync_health", $D/Health.health)
+
+func throw():
+	if $HeldItem._type == LilItem.Type.BLADE:
+		var projectile = preload("res://projectile.tscn").instantiate()
+		projectile._type = Projectile.Type.BLADE
+		item_thrown.emit(self, projectile)
+		
 
 #### RPC and Syncapation ####
 @rpc("call_remote")
