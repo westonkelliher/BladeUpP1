@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://cd8l6pooy8oqa"]
+
+[ext_resource type="Texture2D" uid="uid://b6u7c0egk71p3" path="res://images/rock_blade.png" id="1_nn3lw"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ofcmo"]
+radius = 34.0
+height = 124.0
+
+[node name="Projectile" type="RigidBody2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = -1.5708
+shape = SubResource("CapsuleShape2D_ofcmo")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_nn3lw")

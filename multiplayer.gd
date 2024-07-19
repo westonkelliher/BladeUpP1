@@ -21,11 +21,15 @@ func _on_join_pressed():
 
 
 func _add_player(id = 1):
-	var player = player_scene.instantiate()
+	var player: Player = player_scene.instantiate()
 	player.name = str(id)
 	call_deferred("add_child", player)
 	$Field.players.append(player)
+	player.died.connect(handle_player_death)
 
+func handle_player_death(player: Player):
+	$Field.players.erase(player)
+	player.queue_free()
 
 func choose_enemy_position() -> Vector2:
 	var on_side = randf() < 0.35
@@ -44,6 +48,6 @@ func _on_field_enemy_spawned():
 	var enemy = enemy_scene.instantiate()
 	enemy.position = choose_enemy_position()
 	add_child(enemy, true)
-	if $Field.players.size() > 0:
+	if $Field.players.size() > 0 and $Field.players[0] is Node:
 		enemy.set_target($Field.players[0])
 

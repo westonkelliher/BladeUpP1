@@ -3,7 +3,7 @@ extends Node2D
 signal enemy_spawned()
 
 
-var players := []
+var players: Array = []
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

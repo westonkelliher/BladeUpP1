@@ -1,7 +1,8 @@
 extends CharacterBody2D
+class_name Player
 
 signal test_signal()
-signal died()
+signal died(player: Player)
 
 #### Constants ####
 const SPEED = 400.0
@@ -11,8 +12,8 @@ const PROGRESS_SPEED = 0.8
 
 
 #### Identifiers ####
-func health() -> HealthComponent:
-	return $D/Health
+#func health() -> HealthComponent:
+#	return $D/Health
 
 
 #### Members ####
@@ -96,6 +97,11 @@ func interact_table():
 		table.add_item($HeldItem._type)
 		set_held_item(LilItem.Type.NONE)
 
+# TODO: Combine boulder and table into one class with an overridable operate() 
+#       function (or do the equivalent of that that's appropriate in godot).
+#       Then you can have an initialization function that supplies the graphic 
+#       and function (and whatever else) when it's built. Also interact() and
+#       complete().
 func operate(delta):
 	if !operate_():
 		return
@@ -127,6 +133,11 @@ func operate_table():
 		return table.held_item() == LilItem.Type.ROCK
 	return false
 
+# TODO: Combine boulder and table into one class with an overridable complete() 
+#       function (or do the equivalent of that that's appropriate in godot).
+#       Then you can have an initialization function that supplies the graphic 
+#       and function (and whatever else) when it's built. Also operate() and
+#       interact().
 func complete():
 	_progress = 0
 	if _faced_object is Boulder:
@@ -145,6 +156,13 @@ func complete_table():
 func set_held_item(type: LilItem.Type):
 	rpc("sync_held_item", type)
 
+
+
+#### Reaction ####
+func take_damage(dmg: int):
+	$D/Health.take_damage(dmg)
+	rpc("sync_health", $D/Health.health)
+
 #### RPC and Syncapation ####
 @rpc("call_remote")
 func sync_start_operate(speed: float):
@@ -155,7 +173,10 @@ func sync_held_item(type: LilItem.Type):
 	print(name+str(type))
 	$HeldItem._type = type
 
+@rpc("call_remote")
+func sync_health(health: int):
+	$D/Health.health = health
+
 
 func _on_health_death():
-	queue_free()
-	died.emit()
+	died.emit(self)

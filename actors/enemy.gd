@@ -52,8 +52,13 @@ func change_velocity(delta):
 
 func _on_area_2d_body_entered(body):
 	print("area")
-	if body.has_method("health"):
-		body.health().take_damage(DMG)
+	if body.has_method("take_damage"):
+		# Only apply damage to a player if this instance of the game is the
+		# owner of that player. Same thing for non-players but the
+		# server-instance of the game (the host player's game) is always the
+		# authority
+		if body.is_multiplayer_authority():
+			body.take_damage(DMG)
 	#TODO: impulse calculation copied from sumos
 	var knock = (position - body.position).normalized()*KNOCK_FORCE
 	velocity *= 0.3
@@ -61,5 +66,5 @@ func _on_area_2d_body_entered(body):
 	body.velocity *= 0.5
 	body.velocity -= knock
 
-func on_target_died():
+func on_target_died(target):
 	_target = null
